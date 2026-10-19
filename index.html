@@ -1,0 +1,602 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Small Things</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: left-aligned single column; a narrow mono label column beside each section on wide screens, stacked on phones. */
+:root {
+  --bg: #EEF1F4;
+  --surface: #E2E8EE;
+  --fg: #14202B;
+  --muted: #55646F;
+  --line: #C8D1DA;
+  --accent: #2440E0;
+  --accent-fg: #FFFFFF;
+  --good: #1E8A55;
+  --field: #F8FAFB;
+  --font-display: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F151C;
+    --surface: #18222C;
+    --fg: #E6ECF2;
+    --muted: #9AA9B8;
+    --line: #2A3745;
+    --accent: #8EA3FF;
+    --accent-fg: #0F151C;
+    --good: #4ED08C;
+    --field: #131B23;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F151C;
+  --surface: #18222C;
+  --fg: #E6ECF2;
+  --muted: #9AA9B8;
+  --line: #2A3745;
+  --accent: #8EA3FF;
+  --accent-fg: #0F151C;
+  --good: #4ED08C;
+  --field: #131B23;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+.wrap { max-width: 1040px; margin: 0 auto; }
+
+/* Header */
+.top {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 12px 24px; padding-block: 24px; border-bottom: 1px solid var(--line);
+}
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.01em; text-decoration: none; }
+.nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 20px; }
+.nav a {
+  font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase;
+  text-decoration: none; color: var(--muted); padding: 6px 0;
+}
+.nav a:hover { color: var(--fg); }
+.toggle {
+  font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase;
+  background: transparent; color: var(--fg); border: 1px solid var(--line); border-radius: 999px;
+  padding: 6px 14px; cursor: pointer;
+}
+.toggle:hover { border-color: var(--fg); }
+
+/* Hero */
+.hero { padding-block: clamp(48px, 9vw, 96px) clamp(40px, 7vw, 72px); }
+.hero h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(2.5rem, 8vw, 5.6rem); line-height: 1; letter-spacing: -0.035em;
+  margin: 0 0 28px; max-width: 14ch; text-wrap: balance;
+}
+.hero h1 em {
+  font-style: normal; color: var(--accent);
+  text-decoration: underline; text-decoration-thickness: 0.06em; text-underline-offset: 0.12em;
+}
+.hero p { max-width: 52ch; font-size: 1.15rem; color: var(--muted); margin: 0 0 32px; }
+.status { display: flex; flex-wrap: wrap; gap: 8px 28px; font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+.status span { display: inline-flex; align-items: center; gap: 8px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); }
+.btn {
+  display: inline-block; background: var(--accent); color: var(--accent-fg);
+  font-weight: 600; text-decoration: none; padding: 12px 22px; border-radius: 6px;
+  border: 1px solid var(--accent); font-family: inherit; font-size: 1rem; cursor: pointer;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: 0.6; cursor: default; }
+.btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--fg); filter: none; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 36px; }
+
+/* Sections */
+.section {
+  display: grid; grid-template-columns: 1fr; gap: 16px 48px;
+  padding-block: 44px; border-top: 1px solid var(--line);
+}
+@media (min-width: 760px) { .section { grid-template-columns: 160px minmax(0, 1fr); } }
+.label { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 6px; }
+.section h2 {
+  font-family: var(--font-display); font-weight: 600; font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+  line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 20px; text-wrap: balance;
+}
+.body { min-width: 0; }
+.body p { max-width: 62ch; margin: 0 0 16px; }
+.muted { color: var(--muted); }
+
+/* Services */
+.services { list-style: none; margin: 0; padding: 0; }
+.service {
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px 32px;
+  padding-block: 20px; border-top: 1px solid var(--line);
+}
+.service:first-child { border-top: 0; padding-top: 0; }
+@media (min-width: 640px) { .service { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); } }
+.service h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; letter-spacing: -0.015em; line-height: 1.25; margin: 0; }
+.service p { margin: 0; color: var(--muted); max-width: 56ch; }
+
+/* Process */
+.steps { list-style: none; margin: 0 0 20px; padding: 0; counter-reset: step; }
+.steps li {
+  counter-increment: step; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 12px;
+  padding-block: 16px; border-top: 1px solid var(--line);
+}
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps li::before { content: counter(step); font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); padding-top: 4px; }
+.steps h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; margin: 0 0 2px; letter-spacing: -0.01em; }
+.steps p { margin: 0; color: var(--muted); max-width: 54ch; }
+
+/* Sent requests and fallback */
+.sent { border-top: 1px solid var(--line); padding-top: 16px; }
+.sent h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; margin: 0 0 8px; }
+.sent ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.sent li { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; font-size: 0.92rem; min-width: 0; }
+.sent .st { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; background: var(--surface); padding: 2px 8px; border-radius: 4px; }
+.sent .when { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.fallback { border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 14px; }
+.fallback p { margin: 0; color: var(--muted); }
+
+/* Brief builder */
+.form { display: grid; gap: 18px; max-width: 640px; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.field input, .field select, .field textarea {
+  width: 100%; font: inherit; color: var(--fg); background: var(--field);
+  border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px;
+}
+.field textarea { resize: vertical; min-height: 110px; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.out { font-family: var(--font-mono); font-size: 0.85rem; min-height: 190px; }
+.email-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 0.95rem; color: var(--muted); }
+.email-line code { font-family: var(--font-mono); color: var(--fg); user-select: all; overflow-wrap: anywhere; }
+.copy-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.note { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+
+/* Owner inbox */
+.inbox { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 14px; }
+.card { border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 8px; min-width: 0; }
+.card .head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.card .who { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; }
+.card .meta { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.card .details { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 62ch; }
+.card .state { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.card select { font: inherit; font-size: 0.9rem; color: var(--fg); background: var(--field); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+
+footer {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px;
+  border-top: 1px solid var(--line); padding-block: 28px 40px;
+  font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#top" id="top">Space Riley</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#services">Services</a>
+      <a href="#process">Process</a>
+      <a href="#request">Request a job</a>
+      <button class="toggle" id="theme-toggle" type="button" aria-label="Switch between light and dark theme">Theme</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="headline">
+      <h1 id="headline">Small <em>remote</em> jobs, handled start to finish.</h1>
+      <p>Spreadsheets cleaned up, repetitive tasks automated, documents formatted, simple sites built. Send a short brief and get back finished work.</p>
+      <div class="actions">
+        <a class="btn" href="#request">Request a job</a>
+        <a class="btn ghost" href="#services">See what I take on</a>
+      </div>
+      <div class="status" aria-label="Status">
+        <span><i class="dot" aria-hidden="true"></i>Taking small jobs</span>
+        <span>Fully remote</span>
+      </div>
+    </section>
+
+    <section class="section" id="services" aria-labelledby="services-h">
+      <div class="label">Services</div>
+      <div class="body">
+        <h2 id="services-h">What I take on</h2>
+        <ul class="services">
+          <li class="service">
+            <div><h3>Spreadsheet cleanup</h3></div>
+            <div><p>Messy exports turned into tidy sheets with consistent columns and working formulas.</p></div>
+          </li>
+          <li class="service">
+            <div><h3>Task automation</h3></div>
+            <div><p>Small scripts that handle the repetitive parts, like renaming batches of files, merging PDFs or combining lists.</p></div>
+          </li>
+          <li class="service">
+            <div><h3>Document formatting</h3></div>
+            <div><p>Reports, resumes and forms cleaned up with consistent headings and spacing.</p></div>
+          </li>
+          <li class="service">
+            <div><h3>Simple websites</h3></div>
+            <div><p>One-page sites for a person, a small business or an event, built to read well on a phone.</p></div>
+          </li>
+          <li class="service">
+            <div><h3>Research and lists</h3></div>
+            <div><p>Public information gathered into a clear summary or a sorted list, with sources attached.</p></div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="process" aria-labelledby="process-h">
+      <div class="label">Process</div>
+      <div class="body">
+        <h2 id="process-h">How a job runs</h2>
+        <ol class="steps">
+          <li>
+            <div><h3>Send a brief</h3><p>Say what you need and when you need it.</p></div>
+          </li>
+          <li>
+            <div><h3>Agree the price</h3><p>You get a written description of what will be delivered and a price before any work starts.</p></div>
+          </li>
+          <li>
+            <div><h3>Work and check</h3><p>The work is done and checked against your brief.</p></div>
+          </li>
+          <li>
+            <div><h3>Delivery</h3><p>You receive the finished files with a short note explaining what changed.</p></div>
+          </li>
+        </ol>
+        <p class="muted">I use AI tools to speed up the work, and every result is checked before it goes back to you.</p>
+      </div>
+    </section>
+
+    <section class="section" id="request" aria-labelledby="request-h">
+      <div class="label">Request a job</div>
+      <div class="body">
+        <h2 id="request-h">Write your brief</h2>
+        <p>Describe the job and send it from this page. You can see your sent requests and their status right below the form.</p>
+        <form class="form" id="brief-form" autocomplete="off">
+          <div class="row">
+            <div class="field">
+              <label for="f-name">Your name</label>
+              <input id="f-name" name="name" type="text" placeholder="Your name">
+            </div>
+            <div class="field">
+              <label for="f-type">Type of job</label>
+              <select id="f-type" name="type">
+                <option>Spreadsheet cleanup</option>
+                <option>Task automation</option>
+                <option>Document formatting</option>
+                <option>Simple website</option>
+                <option>Research and lists</option>
+                <option>Something else</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="f-when">Needed by</label>
+              <select id="f-when" name="when">
+                <option>As soon as possible</option>
+                <option selected>Within a week</option>
+                <option>Within a month</option>
+                <option>No deadline</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-details">What do you need done?</label>
+            <textarea id="f-details" name="details" placeholder="Describe the job and what you have to start with."></textarea>
+          </div>
+          <div class="copy-row">
+            <button class="btn" id="send-btn" type="submit">Send request</button>
+            <span class="note" id="send-note" role="status" aria-live="polite"></span>
+          </div>
+          <div id="sent" class="sent" hidden>
+            <h3>Your requests</h3>
+            <ul id="sent-list"></ul>
+          </div>
+          <div id="fallback" class="fallback" hidden>
+            <p>Direct sending is not available in this view. Copy the message below and send it by email instead.</p>
+            <div class="field">
+              <label for="f-out">Your message</label>
+              <textarea id="f-out" class="out" readonly></textarea>
+            </div>
+            <div class="copy-row">
+              <button class="btn ghost" id="copy-brief" type="button">Copy message</button>
+              <span class="note" id="copy-note" role="status"></span>
+            </div>
+            <div class="email-line">Send it to <code id="email">spaceayla1@gmail.com</code></div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="inbox" hidden aria-labelledby="inbox-h">
+      <div class="label">Inbox</div>
+      <div class="body">
+        <h2 id="inbox-h">Incoming requests</h2>
+        <p class="muted">Only you can see this section. There are no notifications, so open this page to check for new requests.</p>
+        <ul class="inbox" id="inbox-list"></ul>
+        <p class="note" id="inbox-note">No requests yet.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>&copy; 2026 Space Riley</span>
+    <span>Made one small thing at a time.</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  // Theme toggle: light or dark, remembered when storage is available.
+  function effectiveTheme() {
+    var set = root.getAttribute("data-theme");
+    if (set) return set;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  try {
+    var saved = localStorage.getItem("theme");
+    if (saved === "light" || saved === "dark") root.setAttribute("data-theme", saved);
+  } catch (e) {}
+  var toggle = document.getElementById("theme-toggle");
+  function label() { toggle.textContent = effectiveTheme() === "dark" ? "Light mode" : "Dark mode"; }
+  label();
+  toggle.addEventListener("click", function () {
+    var next = effectiveTheme() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+    label();
+  });
+
+  // Brief builder: writes the fallback email message as the form changes.
+  var form = document.getElementById("brief-form");
+  var out = document.getElementById("f-out");
+  function val(id) { return document.getElementById(id).value.trim(); }
+  function build() {
+    var name = val("f-name");
+    var details = val("f-details");
+    var lines = [
+      "Hi Riley,",
+      "",
+      "I'd like help with a job.",
+      "",
+      "Type of job: " + val("f-type"),
+      "Needed by: " + val("f-when"),
+      "",
+      "What I need:",
+      details || "(describe the job here)",
+      "",
+      "Thanks,",
+      name || "(your name)"
+    ];
+    out.value = lines.join("\n");
+  }
+  form.addEventListener("input", build);
+  form.addEventListener("change", build);
+  form.addEventListener("submit", function (e) { e.preventDefault(); send(); });
+  build();
+
+  // Direct sending: requests are stored in this page's database under the sender's own id.
+  var sendBtn = document.getElementById("send-btn");
+  var sendNote = document.getElementById("send-note");
+  var fallback = document.getElementById("fallback");
+  var sentBox = document.getElementById("sent");
+  var sentList = document.getElementById("sent-list");
+  var dbRef = null;
+
+  function showFallback(msg) {
+    fallback.hidden = false;
+    if (msg) sendNote.textContent = msg;
+  }
+
+  function fmtTime(iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? "" : d.toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  }
+
+  function renderSent(jobs) {
+    sentList.textContent = "";
+    sentBox.hidden = !jobs.length;
+    jobs.slice().reverse().forEach(function (j) {
+      var li = document.createElement("li");
+      var st = document.createElement("span");
+      st.className = "st";
+      st.textContent = j.status || "new";
+      var t = document.createElement("span");
+      t.textContent = j.type || "Job";
+      var w = document.createElement("span");
+      w.className = "when";
+      w.textContent = fmtTime(j.sentAt);
+      li.appendChild(st);
+      li.appendChild(t);
+      li.appendChild(w);
+      sentList.appendChild(li);
+    });
+  }
+
+  // Owner inbox: lists every request and lets the owner change its status.
+  var inboxSec = document.getElementById("inbox");
+  var inboxList = document.getElementById("inbox-list");
+  var inboxNote = document.getElementById("inbox-note");
+  var STATUSES = ["new", "in progress", "done"];
+
+  async function setStatus(db, uid, jobId, status, selectEl) {
+    selectEl.disabled = true;
+    try {
+      var ref = db.doc("requests/" + uid);
+      var snap = await ref.get();
+      var d = snap.exists ? snap.data() : null;
+      if (!d || !Array.isArray(d.jobs)) return;
+      var jobs = d.jobs.map(function (j) {
+        return j.id === jobId ? Object.assign({}, j, { status: status }) : j;
+      });
+      await ref.update({ jobs: jobs });
+    } catch (e) {
+      inboxNote.textContent = "Could not update the status. Try again.";
+    } finally {
+      selectEl.disabled = false;
+    }
+  }
+
+  function renderInbox(db, items) {
+    inboxList.textContent = "";
+    inboxNote.textContent = items.length ? "" : "No requests yet.";
+    items.forEach(function (it) {
+      var j = it.job;
+      var li = document.createElement("li");
+      li.className = "card";
+
+      var head = document.createElement("div");
+      head.className = "head";
+      var who = document.createElement("span");
+      who.className = "who";
+      who.textContent = j.name || "Unnamed sender";
+      var meta = document.createElement("span");
+      meta.className = "meta";
+      var bits = [j.type, j.when ? "needed: " + j.when : "", fmtTime(j.sentAt)];
+      meta.textContent = bits.filter(Boolean).join(" · ");
+      head.appendChild(who);
+      head.appendChild(meta);
+
+      var details = document.createElement("p");
+      details.className = "details";
+      details.textContent = j.details || "";
+
+      var state = document.createElement("div");
+      state.className = "state";
+      var lab = document.createElement("span");
+      lab.className = "meta";
+      lab.textContent = "Status";
+      var sel = document.createElement("select");
+      sel.setAttribute("aria-label", "Status for request from " + (j.name || "unnamed sender"));
+      STATUSES.forEach(function (s) {
+        var o = document.createElement("option");
+        o.value = s;
+        o.textContent = s;
+        if ((j.status || "new") === s) o.selected = true;
+        sel.appendChild(o);
+      });
+      sel.addEventListener("change", function () { setStatus(db, it.uid, j.id, sel.value, sel); });
+      state.appendChild(lab);
+      state.appendChild(sel);
+
+      li.appendChild(head);
+      li.appendChild(details);
+      li.appendChild(state);
+      inboxList.appendChild(li);
+    });
+  }
+
+  function startInbox(db) {
+    inboxSec.hidden = false;
+    db.collection("requests").onSnapshot(function (snap) {
+      var items = [];
+      snap.docs.forEach(function (doc) {
+        var d = doc.data() || {};
+        (Array.isArray(d.jobs) ? d.jobs : []).forEach(function (j) { items.push({ uid: doc.id, job: j }); });
+      });
+      items.sort(function (a, b) { return String(b.job.sentAt).localeCompare(String(a.job.sentAt)); });
+      renderInbox(db, items);
+    }, function () {});
+  }
+
+  (async function init() {
+    try {
+      if (!window.claude || !window.claude.use) { showFallback(); return; }
+      var db = await window.claude.use("db");
+      var user = await window.claude.use("user");
+      var id = user ? await user.id() : null;
+      if (!db || !id) { showFallback(); return; }
+      dbRef = db.doc("requests/" + id);
+      dbRef.onSnapshot(function (snap) {
+        var d = snap.exists ? snap.data() : null;
+        renderSent(d && Array.isArray(d.jobs) ? d.jobs : []);
+      }, function () {});
+      var admin = false;
+      try { admin = !!(await user.canEdit()) || !!(await user.isOwner()); } catch (e) {}
+      if (admin) startInbox(db);
+    } catch (e) { dbRef = null; showFallback(); }
+  })();
+
+  async function send() {
+    var detailsEl = document.getElementById("f-details");
+    var details = val("f-details");
+    if (!details) {
+      sendNote.textContent = "Describe the job first.";
+      detailsEl.focus();
+      return;
+    }
+    build();
+    if (!dbRef) { showFallback("Direct sending is not available in this view."); return; }
+    sendBtn.disabled = true;
+    sendNote.textContent = "Sending...";
+    try {
+      var snap = await dbRef.get();
+      var cur = snap.exists && Array.isArray(snap.data().jobs) ? snap.data().jobs.slice() : [];
+      cur.push({
+        id: String(Date.now()),
+        name: val("f-name"),
+        type: val("f-type"),
+        when: val("f-when"),
+        details: details,
+        sentAt: new Date().toISOString(),
+        status: "new"
+      });
+      if (cur.length > 20) cur = cur.slice(-20);
+      await dbRef.set({ name: val("f-name"), jobs: cur });
+      detailsEl.value = "";
+      build();
+      sendNote.textContent = "Sent. Your request is in the queue.";
+    } catch (e) {
+      showFallback(e && e.code === "invalid_argument"
+        ? "This page only accepts requests from people with contributor access."
+        : "Could not send. Try again, or use the message below.");
+    } finally {
+      sendBtn.disabled = false;
+    }
+  }
+
+  // Copy the fallback message, or select it when copying is blocked.
+  var btn = document.getElementById("copy-brief");
+  var note = document.getElementById("copy-note");
+  btn.addEventListener("click", function () {
+    function selectText() {
+      out.focus();
+      out.select();
+      note.textContent = "Message selected. Press copy on your device.";
+    }
+    try {
+      navigator.clipboard.writeText(out.value).then(function () {
+        note.textContent = "Copied. Paste it into an email.";
+        setTimeout(function () { note.textContent = ""; }, 2500);
+      }, selectText);
+    } catch (e) { selectText(); }
+  });
+})();
+</script>
+
+</body></html>
