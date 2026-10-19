@@ -273,7 +273,7 @@ footer {
       <div class="label">Request a job</div>
       <div class="body">
         <h2 id="request-h">Write your brief</h2>
-        <p>Describe the job and send it from this page. You can see your sent requests and their status right below the form.</p>
+        <p>Describe the job and send it from this page. It goes straight to my email and I will reply with a price before any work starts.</p>
         <form class="form" id="brief-form" autocomplete="off">
           <div class="row">
             <div class="field">
@@ -311,12 +311,8 @@ footer {
             <button class="btn" id="send-btn" type="submit">Send request</button>
             <span class="note" id="send-note" role="status" aria-live="polite"></span>
           </div>
-          <div id="sent" class="sent" hidden>
-            <h3>Your requests</h3>
-            <ul id="sent-list"></ul>
-          </div>
           <div id="fallback" class="fallback" hidden>
-            <p>Direct sending is not available in this view. Copy the message below and send it by email instead.</p>
+            <p>Sending did not work. Copy the message below and email it instead.</p>
             <div class="field">
               <label for="f-out">Your message</label>
               <textarea id="f-out" class="out" readonly></textarea>
@@ -331,15 +327,6 @@ footer {
       </div>
     </section>
 
-    <section class="section" id="inbox" hidden aria-labelledby="inbox-h">
-      <div class="label">Inbox</div>
-      <div class="body">
-        <h2 id="inbox-h">Incoming requests</h2>
-        <p class="muted">Only you can see this section. There are no notifications, so open this page to check for new requests.</p>
-        <ul class="inbox" id="inbox-list"></ul>
-        <p class="note" id="inbox-note">No requests yet.</p>
-      </div>
-    </section>
   </main>
 
   <footer>
@@ -400,147 +387,16 @@ footer {
   form.addEventListener("submit", function (e) { e.preventDefault(); send(); });
   build();
 
-  // Direct sending: requests are stored in this page's database under the sender's own id.
+  // Sending: posts the request to FormSubmit, which emails it to the owner.
   var sendBtn = document.getElementById("send-btn");
   var sendNote = document.getElementById("send-note");
   var fallback = document.getElementById("fallback");
-  var sentBox = document.getElementById("sent");
-  var sentList = document.getElementById("sent-list");
-  var dbRef = null;
+  var ENDPOINT = "https://formsubmit.co/ajax/spaceayla1@gmail.com";
 
   function showFallback(msg) {
     fallback.hidden = false;
     if (msg) sendNote.textContent = msg;
   }
-
-  function fmtTime(iso) {
-    var d = new Date(iso);
-    return isNaN(d) ? "" : d.toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-  }
-
-  function renderSent(jobs) {
-    sentList.textContent = "";
-    sentBox.hidden = !jobs.length;
-    jobs.slice().reverse().forEach(function (j) {
-      var li = document.createElement("li");
-      var st = document.createElement("span");
-      st.className = "st";
-      st.textContent = j.status || "new";
-      var t = document.createElement("span");
-      t.textContent = j.type || "Job";
-      var w = document.createElement("span");
-      w.className = "when";
-      w.textContent = fmtTime(j.sentAt);
-      li.appendChild(st);
-      li.appendChild(t);
-      li.appendChild(w);
-      sentList.appendChild(li);
-    });
-  }
-
-  // Owner inbox: lists every request and lets the owner change its status.
-  var inboxSec = document.getElementById("inbox");
-  var inboxList = document.getElementById("inbox-list");
-  var inboxNote = document.getElementById("inbox-note");
-  var STATUSES = ["new", "in progress", "done"];
-
-  async function setStatus(db, uid, jobId, status, selectEl) {
-    selectEl.disabled = true;
-    try {
-      var ref = db.doc("requests/" + uid);
-      var snap = await ref.get();
-      var d = snap.exists ? snap.data() : null;
-      if (!d || !Array.isArray(d.jobs)) return;
-      var jobs = d.jobs.map(function (j) {
-        return j.id === jobId ? Object.assign({}, j, { status: status }) : j;
-      });
-      await ref.update({ jobs: jobs });
-    } catch (e) {
-      inboxNote.textContent = "Could not update the status. Try again.";
-    } finally {
-      selectEl.disabled = false;
-    }
-  }
-
-  function renderInbox(db, items) {
-    inboxList.textContent = "";
-    inboxNote.textContent = items.length ? "" : "No requests yet.";
-    items.forEach(function (it) {
-      var j = it.job;
-      var li = document.createElement("li");
-      li.className = "card";
-
-      var head = document.createElement("div");
-      head.className = "head";
-      var who = document.createElement("span");
-      who.className = "who";
-      who.textContent = j.name || "Unnamed sender";
-      var meta = document.createElement("span");
-      meta.className = "meta";
-      var bits = [j.type, j.when ? "needed: " + j.when : "", fmtTime(j.sentAt)];
-      meta.textContent = bits.filter(Boolean).join(" · ");
-      head.appendChild(who);
-      head.appendChild(meta);
-
-      var details = document.createElement("p");
-      details.className = "details";
-      details.textContent = j.details || "";
-
-      var state = document.createElement("div");
-      state.className = "state";
-      var lab = document.createElement("span");
-      lab.className = "meta";
-      lab.textContent = "Status";
-      var sel = document.createElement("select");
-      sel.setAttribute("aria-label", "Status for request from " + (j.name || "unnamed sender"));
-      STATUSES.forEach(function (s) {
-        var o = document.createElement("option");
-        o.value = s;
-        o.textContent = s;
-        if ((j.status || "new") === s) o.selected = true;
-        sel.appendChild(o);
-      });
-      sel.addEventListener("change", function () { setStatus(db, it.uid, j.id, sel.value, sel); });
-      state.appendChild(lab);
-      state.appendChild(sel);
-
-      li.appendChild(head);
-      li.appendChild(details);
-      li.appendChild(state);
-      inboxList.appendChild(li);
-    });
-  }
-
-  function startInbox(db) {
-    inboxSec.hidden = false;
-    db.collection("requests").onSnapshot(function (snap) {
-      var items = [];
-      snap.docs.forEach(function (doc) {
-        var d = doc.data() || {};
-        (Array.isArray(d.jobs) ? d.jobs : []).forEach(function (j) { items.push({ uid: doc.id, job: j }); });
-      });
-      items.sort(function (a, b) { return String(b.job.sentAt).localeCompare(String(a.job.sentAt)); });
-      renderInbox(db, items);
-    }, function () {});
-  }
-
-  (async function init() {
-    try {
-      if (!window.claude || !window.claude.use) { showFallback(); return; }
-      var db = await window.claude.use("db");
-      var user = await window.claude.use("user");
-      var id = user ? await user.id() : null;
-      if (!db || !id) { showFallback(); return; }
-      dbRef = db.doc("requests/" + id);
-      dbRef.onSnapshot(function (snap) {
-        var d = snap.exists ? snap.data() : null;
-        renderSent(d && Array.isArray(d.jobs) ? d.jobs : []);
-      }, function () {});
-      var admin = false;
-      try { admin = !!(await user.canEdit()) || !!(await user.isOwner()); } catch (e) {}
-      if (admin) startInbox(db);
-    } catch (e) { dbRef = null; showFallback(); }
-  })();
 
   async function send() {
     var detailsEl = document.getElementById("f-details");
@@ -551,30 +407,30 @@ footer {
       return;
     }
     build();
-    if (!dbRef) { showFallback("Direct sending is not available in this view."); return; }
     sendBtn.disabled = true;
     sendNote.textContent = "Sending...";
     try {
-      var snap = await dbRef.get();
-      var cur = snap.exists && Array.isArray(snap.data().jobs) ? snap.data().jobs.slice() : [];
-      cur.push({
-        id: String(Date.now()),
-        name: val("f-name"),
-        type: val("f-type"),
-        when: val("f-when"),
-        details: details,
-        sentAt: new Date().toISOString(),
-        status: "new"
+      var res = await fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          _subject: "New job request: " + val("f-type"),
+          _captcha: "false",
+          _template: "table",
+          name: val("f-name") || "(no name)",
+          type: val("f-type"),
+          needed_by: val("f-when"),
+          details: details
+        })
       });
-      if (cur.length > 20) cur = cur.slice(-20);
-      await dbRef.set({ name: val("f-name"), jobs: cur });
+      var data = await res.json().catch(function () { return {}; });
+      if (!res.ok || data.success === "false" || data.success === false) throw new Error("fail");
       detailsEl.value = "";
       build();
-      sendNote.textContent = "Sent. Your request is in the queue.";
+      fallback.hidden = true;
+      sendNote.textContent = "Sent. Your request is in my inbox.";
     } catch (e) {
-      showFallback(e && e.code === "invalid_argument"
-        ? "This page only accepts requests from people with contributor access."
-        : "Could not send. Try again, or use the message below.");
+      showFallback("Could not send. Use the message below instead.");
     } finally {
       sendBtn.disabled = false;
     }
