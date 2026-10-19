@@ -294,6 +294,10 @@ footer {
           </div>
           <div class="row">
             <div class="field">
+              <label for="f-email">Your email</label>
+              <input id="f-email" name="email" type="email" placeholder="you@example.com" required>
+            </div>
+            <div class="field">
               <label for="f-when">Needed by</label>
               <select id="f-when" name="when">
                 <option>As soon as possible</option>
@@ -307,6 +311,7 @@ footer {
             <label for="f-details">What do you need done?</label>
             <textarea id="f-details" name="details" placeholder="Describe the job and what you have to start with."></textarea>
           </div>
+          <input type="checkbox" id="f-botcheck" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
           <div class="copy-row">
             <button class="btn" id="send-btn" type="submit">Send request</button>
             <span class="note" id="send-note" role="status" aria-live="polite"></span>
@@ -387,11 +392,12 @@ footer {
   form.addEventListener("submit", function (e) { e.preventDefault(); send(); });
   build();
 
-  // Sending: posts the request to FormSubmit, which emails it to the owner.
+  // Sending: posts the request to Web3Forms, which emails it to the owner.
   var sendBtn = document.getElementById("send-btn");
   var sendNote = document.getElementById("send-note");
   var fallback = document.getElementById("fallback");
-  var ENDPOINT = "https://formsubmit.co/ajax/spaceayla1@gmail.com";
+  var ENDPOINT = "https://api.web3forms.com/submit";
+  var ACCESS_KEY = "09801b31-67ae-40d9-9f81-5b4133d85826";
 
   function showFallback(msg) {
     fallback.hidden = false;
@@ -406,6 +412,13 @@ footer {
       detailsEl.focus();
       return;
     }
+    var emailEl = document.getElementById("f-email");
+    var email = val("f-email");
+    if (!email || !emailEl.checkValidity()) {
+      sendNote.textContent = "Enter a valid email so I can reply.";
+      emailEl.focus();
+      return;
+    }
     build();
     sendBtn.disabled = true;
     sendNote.textContent = "Sending...";
@@ -414,17 +427,19 @@ footer {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({
-          _subject: "New job request: " + val("f-type"),
-          _captcha: "false",
-          _template: "table",
+          access_key: ACCESS_KEY,
+          subject: "New job request: " + val("f-type"),
+          from_name: "Small Things Site",
           name: val("f-name") || "(no name)",
+          email: email,
           type: val("f-type"),
           needed_by: val("f-when"),
-          details: details
+          details: details,
+          botcheck: document.getElementById("f-botcheck").checked
         })
       });
       var data = await res.json().catch(function () { return {}; });
-      if (!res.ok || data.success === "false" || data.success === false) throw new Error("fail");
+      if (!res.ok || data.success !== true) throw new Error("fail");
       detailsEl.value = "";
       build();
       fallback.hidden = true;
