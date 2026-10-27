@@ -434,7 +434,10 @@ footer {
       var total = 0;
       for (var i = 0; i < filesEl.files.length; i++) total += filesEl.files[i].size;
       if (total > 5 * 1024 * 1024) {
-        sendNote.textContent = "Files are too big. Keep them under 5 MB total.";
+        var mb = (total / 1024 / 1024).toFixed(1);
+        alert("Your files are " + mb + " MB. The limit is 5 MB total. Please make them smaller or send fewer files.");
+        sendNote.textContent = "Files are too big (" + mb + " MB). Keep them under 5 MB total.";
+        sendNote.style.color = "#c0392b";
         filesEl.focus();
         return;
       }
