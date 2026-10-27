@@ -274,7 +274,7 @@ footer {
       <div class="body">
         <h2 id="request-h">Write your brief</h2>
         <p>Describe the job and send it from this page. It goes straight to my email and I will reply with a price before any work starts.</p>
-        <form class="form" id="brief-form" autocomplete="off">
+        <form class="form" id="brief-form" autocomplete="off" action="https://formsubmit.co/spaceayla1@gmail.com" method="POST" enctype="multipart/form-data">
           <div class="row">
             <div class="field">
               <label for="f-name">Your name</label>
@@ -311,6 +311,15 @@ footer {
             <label for="f-details">What do you need done?</label>
             <textarea id="f-details" name="details" placeholder="Describe the job and what you have to start with."></textarea>
           </div>
+          <div class="field">
+            <label for="f-files">Add files (optional)</label>
+            <input id="f-files" name="attachment" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.ppt,.pptx">
+            <span class="note">Images, PDFs, docs or sheets. Keep it under 5 MB total.</span>
+          </div>
+          <input type="hidden" name="_subject" id="f-subject" value="New job request">
+          <input type="hidden" name="_replyto" id="f-replyto" value="">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_next" id="f-next" value="https://thzzjhs8y4-afk.github.io/small-things-site/?sent=1#request">
           <input type="checkbox" id="f-botcheck" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
           <div class="copy-row">
             <button class="btn" id="send-btn" type="submit">Send request</button>
@@ -420,6 +429,23 @@ footer {
       return;
     }
     build();
+    var filesEl = document.getElementById("f-files");
+    if (filesEl.files.length) {
+      var total = 0;
+      for (var i = 0; i < filesEl.files.length; i++) total += filesEl.files[i].size;
+      if (total > 5 * 1024 * 1024) {
+        sendNote.textContent = "Files are too big. Keep them under 5 MB total.";
+        filesEl.focus();
+        return;
+      }
+      // Files go through FormSubmit as a normal form post (it emails the files).
+      document.getElementById("f-subject").value = "New job request: " + val("f-type");
+      document.getElementById("f-replyto").value = email;
+      sendBtn.disabled = true;
+      sendNote.textContent = "Sending with files...";
+      HTMLFormElement.prototype.submit.call(form);
+      return;
+    }
     sendBtn.disabled = true;
     sendNote.textContent = "Sending...";
     try {
@@ -450,6 +476,8 @@ footer {
       sendBtn.disabled = false;
     }
   }
+
+  if (/[?&]sent=1/.test(location.search)) sendNote.textContent = "Sent. Your request and files are in my inbox.";
 
   // Copy the fallback message, or select it when copying is blocked.
   var btn = document.getElementById("copy-brief");
